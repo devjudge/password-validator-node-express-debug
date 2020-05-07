@@ -68,7 +68,7 @@ app.put('/api/user/login/', (req, res) => {
 app.put('/api/user/change-password/', (req, res) => {
   var password = req.body.password;
   var confirm_password = req.body.confirm_password;
-  var auth_token = req.get('auth_token');
+  var auth_token = req.get('auth-token');
 
   resp = validate_existence(email, 'Email');
   if (resp !== true) {
