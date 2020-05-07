@@ -51,7 +51,8 @@ app.put('/api/user/login/', (req, res) => {
       })
       .then((result) => {
         return res.status(200).send({
-          status: 'success'
+          status: 'success',
+          auth_token: auth_token
         });
       })
     } else {
