@@ -27,7 +27,9 @@ const sql_create = `CREATE TABLE IF NOT EXISTS users (
   is_logged_in TINYINT NOT NULL DEFAULT 0
 );`;
 
-const sql_add_user = `INSERT INTO users(name, email, password, is_logged_in) VALUES('abc', 'abc@gmail.com', 'abc@123', 0)`;
+const sql_add_user = `INSERT INTO users(name, email, password, is_logged_in) 
+VALUES('abc', 'abcd@gmail.com', 'abc@123', 'abcd-123-shbbchsj-12bbbch', 0), 
+('abc', 'abc@gmail.com', 'abcd123456', 'abcd-123-shbbchsj-12bbbch', 0)`;
 
 db.run(sql_delete, err => {
   if (err) {
