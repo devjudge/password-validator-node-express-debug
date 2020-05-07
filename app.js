@@ -170,7 +170,7 @@ var get_user_by_auth_token = function(auth_token) {
 var get_user_by_email_and_password = function(email, password) {
   const sql = "SELECT * FROM users WHERE email = ? AND password = ? LIMIT 1";
   return new Promise((resolve, reject) => {
-    db.get(sql, [password, email], (err, result) => {
+    db.get(sql, [email, password], (err, result) => {
       if (err) {
         console.log('Error running sql: ' + sql);
         console.log(err);
