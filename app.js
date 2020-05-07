@@ -121,9 +121,9 @@ app.put('/api/user/change-password/', (req, res) => {
         });
       })
     } else {
-      res.status(404).json({
+      res.status(401).json({
         'status': 'failure',
-        'reason': 'User not found!'
+        'reason': 'Unauthorized!'
       })  
     }
   });
