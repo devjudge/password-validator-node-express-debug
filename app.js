@@ -70,7 +70,7 @@ app.put('/api/user/change-password/', (req, res) => {
   var confirm_password = req.body.confirm_password;
   var auth_token = req.get('auth-token');
 
-  resp = validate_existence(email, 'Email');
+  resp = validate_existence(auth_token, 'Auth token');
   if (resp !== true) {
     return res.status(400).send({
       status: 'failure',
