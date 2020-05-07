@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var db = require('./db_conn');
 var app = express();
+var uuid = require('uuid');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -40,7 +41,8 @@ app.put('/api/user/login/', (req, res) => {
   }))
   .then((row) => {
     if (row) {
-      update_user_login_status(row['id'], 1)
+      var auth_token = uuid.v4();
+      update_user_login_status(row['id'], 1, auth_token)
       .catch((err) => {
         res.status(500).json({
           'status': 'failure',
@@ -63,9 +65,9 @@ app.put('/api/user/login/', (req, res) => {
 
 
 app.put('/api/user/change-password/', (req, res) => {
-  var email = req.body.email;
   var password = req.body.password;
   var confirm_password = req.body.confirm_password;
+  var auth_token = req.get('auth_token');
 
   resp = validate_existence(email, 'Email');
   if (resp !== true) {
@@ -98,7 +100,7 @@ app.put('/api/user/change-password/', (req, res) => {
     });
   }
 
-  get_user_by_email(email)
+  get_user_by_auth_token(auth_token)
   .catch((err) => res.status(500).json({
     'status': 'failure',
     'reason': 'Error occurred!'
@@ -149,10 +151,10 @@ var validate_password = function(input, field_display_name) {
   return true;
 }
 
-var get_user_by_email = function(email) {
-  const sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
+var get_user_by_auth_token = function(auth_token) {
+  const sql = "SELECT * FROM users WHERE auth_token = ? LIMIT 1";
   return new Promise((resolve, reject) => {
-    db.get(sql, [email], (err, result) => {
+    db.get(sql, [auth_token], (err, result) => {
       if (err) {
         console.log('Error running sql: ' + sql);
         console.log(err);
@@ -195,9 +197,9 @@ var update_user_password = function(user_id, password, is_logged_in) {
   })
 };
 
-var update_user_login_status = function(user_id, is_logged_in) {
-  const sql = `UPDATE users SET is_logged_in = ? where id = ?;`;
-  const params = [is_logged_in, user_id];
+var update_user_login_status = function(user_id, is_logged_in, auth_token) {
+  const sql = `UPDATE users SET is_logged_in = ?, auth_token = ? where id = ?;`;
+  const params = [is_logged_in, auth_token, user_id];
   return new Promise((resolve, reject) => {
     db.run(sql, params, (err, result) => {
       if (err) {

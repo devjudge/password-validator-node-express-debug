@@ -23,6 +23,7 @@ const sql_create = `CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL UNIQUE,
   password VARCHAR(10) NOT NULL,
+  auth_token VARCHAR(256) NULL UNIQUE,
   is_logged_in TINYINT NOT NULL DEFAULT 0
 );`;
 
